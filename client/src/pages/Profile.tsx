@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 const Profile = () => {
-  // Dummy Telegram WebApp data (replace with actual Telegram data later)
   const [user, setUser] = useState({
     name: "Telegram User",
     username: "@telegram_user",
@@ -19,9 +18,29 @@ const Profile = () => {
     }
   }, []);
 
+  const handlePayment = () => {
+    if (!window.Telegram?.WebApp?.requestStarPayment) {
+      alert("Telegram Stars payment is not supported in this environment.");
+      return;
+    }
+  
+    window.Telegram.WebApp.requestStarPayment({
+           
+      callback: (result) => {
+        console.log("Payment Result:", result);
+        if (result.status === "accepted") {
+          alert("You've successfully paid with Stars!");
+        } else {
+          alert("Payment canceled or failed.");
+        }
+      },
+    });
+  };
+  
+  
+
   return (
     <div className="max-w-3xl mx-auto h-full p-6 bg-white shadow-md rounded-lg text-center">
-      {/* Profile Header */}
       <div className="flex flex-col items-center space-y-4">
         <img src={user.avatar} alt="Profile" className="w-24 h-24 rounded-full border-2 border-gray-300" />
         <div>
@@ -30,9 +49,8 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Edit Profile Button */}
-      <button className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600">
-        Edit Profile
+      <button onClick={handlePayment} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+        Buy Entry with Telegram Stars
       </button>
     </div>
   );
