@@ -73,7 +73,7 @@ const GiveawayForum = () => {
       {/* Navigation Buttons Fixed at the Bottom */}
       <div
         className={`
-          fixed bottom-18 left-0 w-full bg-white p-4 flex max-w-lg mx-auto items-center 
+          fixed bottom-16 left-0 w-full bg-white p-4 flex max-w-lg mx-auto items-center 
           ${step === 1 ? "justify-center" : "justify-between"}
         `}
       >
@@ -89,7 +89,7 @@ const GiveawayForum = () => {
               prevStep();
               vibrate();
             }}
-            className="bg-gray-300 rounded h-12 w-24 text-center"
+            className="bg-gray-300 rounded h-12 w-24 text-center  text-1xl rounded-xl "
           >
             Back
           </motion.button>
@@ -97,26 +97,30 @@ const GiveawayForum = () => {
 
         {/* Next/Finish Button */}
         <motion.button
-  initial={{ scale: 0.8, opacity: 0 }}
-  animate={{ scale: 1, opacity: 1 }}
+  initial={{ scale: 0.8, y: 20, opacity: 0 }}
+  animate={{ scale: 1, y: 0, opacity: 1 }}
+  exit={{ scale: 0.8, y: 20, opacity: 0 }}
   transition={{ duration: 0.3, ease: "easeOut" }}
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.9, y: 2 }}
-          onClick={() => {
-            if (step < 4) {
-              nextStep();   
-              vibrate();
-            }
-          }}
-          disabled={step === 4}
-          className={`
-            ${step === 4 ? "bg-green-500" : "bg-[#50A7EA]"} 
-            text-white rounded h-12 disabled:opacity-50
-            ${step === 1 ? "flex-grow" : "w-24"}
-          `}
-        >
-          {step === 4 ? "Finish" : "Next"}
-        </motion.button>
+  onClick={() => {
+    if (step < 4) {
+      nextStep();
+      vibrate();
+    }
+  }}
+  disabled={step === 4}
+  className={`
+    ${step === 4 ? "bg-green-500" : "bg-[#50A7EA]"} 
+    text-white text-1xl rounded-xl h-12 disabled:opacity-50
+    ${step === 1 ? "flex-grow" : "w-24"}
+  `}
+>
+  {step === 4 ? "Finish" : "Next"}
+</motion.button>
+
+
+
       </div>
     </div>
   );

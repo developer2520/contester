@@ -58,7 +58,7 @@ const GiveawayTutorial = () => {
           disableOnInteraction: false
         }}
         loop
-        className="w-full m-3"
+        className="w-full m-3 bg-transparent"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
@@ -75,11 +75,12 @@ const GiveawayTutorial = () => {
                 ${slide.bgColor}
                 rounded-3xl
                 w-19/20
+                bg-transparent
 mx-auto
                 p-7
                 text-center
                 shadow-2xl
-                transition-all
+                ease
                 duration-300
                 min-h-[400px]
                 flex
@@ -92,7 +93,7 @@ mx-auto
             >
               {/* Subtle Overlay Effect */}
               <div 
-                className="absolute inset-0 bg-black/10 backdrop-brightness-90" 
+                className="absolute inset-0 bg-black/10 backdrop-brightness-90 rounded-lg" 
                 style={{ zIndex: 1 }}
               />
 
