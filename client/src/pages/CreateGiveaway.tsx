@@ -110,7 +110,7 @@ const GiveawayForum = () => {
           }}
           disabled={step === 4}
           className={`
-            ${step === 4 ? "bg-green-500" : "bg-blue-500"} 
+            ${step === 4 ? "bg-green-500" : "bg-[#50A7EA]"} 
             text-white rounded h-12 disabled:opacity-50
             ${step === 1 ? "flex-grow" : "w-24"}
           `}
