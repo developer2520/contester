@@ -1,8 +1,7 @@
 import { Bot } from "grammy";
 
 // Bun automatically loads .env files, but let's check
-console.log("BOT_TOKEN:", process.env.BOT_TOKEN);
-console.log("BOT_PROVIDER_TOKEN:", process.env.BOT_PROVIDER_TOKEN);
+
 
 if (!process.env.BOT_TOKEN || !process.env.BOT_PROVIDER_TOKEN) {
     throw new Error("⚠️ Missing BOT_TOKEN or BOT_PROVIDER_TOKEN in .env file!");
@@ -11,7 +10,7 @@ if (!process.env.BOT_TOKEN || !process.env.BOT_PROVIDER_TOKEN) {
 const bot = new Bot(process.env.BOT_TOKEN!);
 
 bot.command("start", (ctx) => {
-    ctx.reply("Hello! I'm your bot. Use /buy to purchase with Telegram Stars.");
+    ctx.reply("Hello! I'm your bot.  /buy to purchase with Telegram Stars.");
 });
 
 
