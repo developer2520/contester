@@ -4,7 +4,7 @@ line_break_column=72
 auto_continue_multiline=true
 
 [file_prefs]
-final_new_line=true
+tinal_new_line=true
 ensure_convert_new_lines=false
 strip_trailing_spaces=false
 replace_tabs=false

@@ -23,6 +23,10 @@ bot.command("pay", (ctx) => {
       [{ amount: 10000, label: "contester" }, // Product variants
     ]);
   });
+
+bot.command("pay", (ctx) => {
+
+})
 // Start the bot
 bot.start();
 console.log("Bot is running...");

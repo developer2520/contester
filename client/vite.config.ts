@@ -11,11 +11,11 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
-    allowedHosts: ['455a-84-54-73-90.ngrok-free.app'],
+    allowedHosts: ['9201-213-230-93-207.ngrok-free.app'],
     strictPort: true,
     cors: {
       origin: "e852-213-230-92-37.ngrok-free.app",
-      credentials: true,
+      credentials: true, 
     },
     hmr: {
       clientPort: 443,

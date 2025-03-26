@@ -1,3 +1,4 @@
+import React from 'react'
 const StepOne = () => {
   return (
     <div>
@@ -13,7 +14,6 @@ const StepOne = () => {
       </label>
       
       <label className="block mb-2">
-        Description: 
         <textarea 
           className="w-full border p-2 rounded mt-1" 
           rows={3} 
