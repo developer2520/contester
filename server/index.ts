@@ -5,16 +5,14 @@ import {Bot } from 'grammy'
 const bot = new Bot("7343758532:AAGTYrA72OvtRiXwtYLCEHeaE57N84p4fAc")
 const app = new Hono();
 connectDB()
-// Define a simple route
-app.get("/whatsapp", (c) => {
-  return c.text("Hello, Bun + Hono!");
-});
+// Define a simple route app.get("/whatsapp", (c) => { return c.text("Hello,
+// Bun + Hono!"); });
 
 bot.command('start', (ctx) => {
 ctx.reply("Welcome")
 })
 
-bot.start()
+bot.start() 
 // Start the server
 export default {
   port: 4000,

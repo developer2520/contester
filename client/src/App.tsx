@@ -12,12 +12,12 @@ function App() {
         <Routes>
         <Route exact path="/" element={<Home />} />
 <Route path="/profile" element={<Profile />} />
-
+ 
 
           <Route path="/home" element={<Home />} />
           <Route path="/create" element={<CreateGiveaway />} />
         </Routes>
-
+h1
         <BottomNav />
       </DashboardLayout>
     </Router>

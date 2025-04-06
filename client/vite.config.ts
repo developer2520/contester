@@ -10,8 +10,8 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    port: 3000,
-    allowedHosts: ['9201-213-230-93-207.ngrok-free.app'],
+    port: 5173,
+    allowedHosts: ['f88d-84-54-70-61.ngrok-free.app'],
     strictPort: true,
     cors: {
       origin: "e852-213-230-92-37.ngrok-free.app",
@@ -19,6 +19,7 @@ export default defineConfig({
     },
     hmr: {
       clientPort: 443,
+      protocol: 'wss'
     },
   },
   

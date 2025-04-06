@@ -4,7 +4,6 @@ import { IoAddCircleSharp, IoPersonSharp } from "react-icons/io5";
 import { GoHomeFill } from "react-icons/go";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-
 const navItems = [
   {
     name: "Home",
