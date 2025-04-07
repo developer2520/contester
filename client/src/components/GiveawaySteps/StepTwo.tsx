@@ -1,194 +1,139 @@
-import React, { useState, useEffect, KeyboardEvent } from "react";
+import { useState } from "react";
+import { Calendar, Users } from "lucide-react";
 
-// Define types for channel objects and props
-interface Channel {
-  username: string;
-  photo: string | null;
-}
+export default function StepTwo({
+  onConfigUpdate,
+}: {
+  onConfigUpdate?: (config: GiveawayConfig) => void;
+}) {
+  const [winners, setWinners] = useState(1);
+  const [endDate, setEndDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(23, 59);
+    return d;
+  });
+  const [selectedDuration, setSelectedDuration] = useState(1); // Track selected duration
 
-interface StepTwoProps {
-  onChannelsUpdate?: (channels: Channel[]) => void; // Callback to update parent
-  initialChannels?: Channel[]; // Initial list of channels (optional)
-}
-
-const StepTwo: React.FC<StepTwoProps> = ({
-  onChannelsUpdate,
-  initialChannels = [],
-}) => {
-  const [channelUsername, setChannelUsername] = useState<string>("");
-  const [channelPhoto, setChannelPhoto] = useState<string | null>(null);
-  const [channels, setChannels] = useState<Channel[]>(initialChannels);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch channel photo when username changes
-  useEffect(() => {
-    if (!channelUsername) {
-      setChannelPhoto(null);
-      setError(null);
-      return;
-    }
-
-    const fetchChannelPhoto = async () => {
-      try {
-        const username = channelUsername.startsWith("@")
-          ? channelUsername.slice(1)
-          : channelUsername;
-        const profilePhotoUrl = `https://t.me/i/userpic/320/${username}.jpg`;
-
-        const response = await fetch(profilePhotoUrl, { method: "HEAD" });
-        if (response.ok) {
-          setChannelPhoto(profilePhotoUrl);
-          setError(null);
-        } else {
-          setChannelPhoto(null);
-          setError("Channel not found or no profile photo available.");
-        }
-      } catch (error) {
-        console.error("Error fetching channel photo:", error);
-        setChannelPhoto(null);
-        setError("Error verifying channel. Please check the username.");
-      }
-    };
-
-    fetchChannelPhoto();
-  }, [channelUsername]);
-
-  // Add channel to the list
-  const addChannel = () => {
-    if (channelUsername.trim() === "") {
-      setError("Please enter a channel username.");
-      return;
-    }
-
-    const username = channelUsername.startsWith("@")
-      ? channelUsername
-      : `@${channelUsername}`;
-
-    // Prevent duplicates
-    if (channels.some((ch) => ch.username === username)) {
-      setError("This channel is already added.");
-      return;
-    }
-
-    const newChannel: Channel = { username, photo: channelPhoto };
-    const updatedChannels = [...channels, newChannel];
-    setChannels(updatedChannels);
-    setChannelUsername("");
-    setChannelPhoto(null);
-    setError(null);
-
-    // Notify parent component
-    if (onChannelsUpdate) onChannelsUpdate(updatedChannels);
+  const updateConfig = (w: number, d: Date) => {
+    onConfigUpdate?.({ winnersCount: w, endDate: d });
   };
 
-  // Remove channel from the list
-  const removeChannel = (index: number) => {
-    const updatedChannels = channels.filter((_, i) => i !== index);
-    setChannels(updatedChannels);
-    if (onChannelsUpdate) onChannelsUpdate(updatedChannels);
-  };
-
-  // Handle Enter key press
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      addChannel();
-    }
+  const setQuickDuration = (days: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    d.setHours(23, 59);
+    setEndDate(d);
+    updateConfig(winners, d);
+    setSelectedDuration(days); // Update selected duration
   };
 
   return (
-    <div className="p-4 bg-white w-full">
-      <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
-        Step 2: Participation Requirements
-      </h2>
+    <div className="m-0 p-0 w-full">
+      <div className="w-full px-0 bg-white rounded-lg">
+        <h2 className="text-center text-2xl font-semibold text-gray-800 mb-6">
+          Giveaway Setup
+        </h2>
 
-      <div className="space-y-6">
-        {/* Channel Input */}
-        <div>
-          <label className="block text-lg font-medium mb-2 text-gray-700">
-            Add Telegram Channel:
+        {/* Number of Winners */}
+        <div className="border border-gray-200 p-5 mb-6 rounded-lg">
+          <label className="flex items-center gap-2 font-medium mb-3 text-gray-800">
+            <Users className="w-5 h-5 text-[#51a6ea]" />
+            Number of Winners
           </label>
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              className="flex-grow border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="e.g. @yourchannel"
-              value={channelUsername}
-              onChange={(e) => setChannelUsername(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <button
-              onClick={addChannel}
-              className="bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-              type="button"
-            >
-              Add
-            </button>
+          <input
+            type="number"
+            min={1}
+            value={winners}
+            onChange={(e) => {
+              const val = Math.max(1, Number(e.target.value));
+              setWinners(val);
+              updateConfig(val, endDate);
+            }}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#51a6ea] focus:border-[#51a6ea]"
+          />
+          <div className="flex gap-2 mt-3">
+            {[1, 3, 5, 10].map((val) => (
+              <button
+                key={val}
+                onClick={() => {
+                  setWinners(val);
+                  updateConfig(val, endDate);
+                }}
+                className={`px-3 py-1 border text-sm rounded-md ${
+                  winners === val
+                    ? "bg-[#51a6ea] text-white border-[#51a6ea]"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                {val}
+              </button>
+            ))}
           </div>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>
 
-        {/* Channel Preview */}
-        {channelUsername && (
-          <div className="p-3 bg-gray-100 rounded-lg flex items-center space-x-3">
-            {channelPhoto ? (
-              <img
-                src={channelPhoto}
-                alt="Channel Preview"
-                className="w-12 h-12 rounded-full border"
-              />
-            ) : (
-              <div className="w-12 h-12 bg-gray-300 rounded-full" />
-            )}
-            <span className="text-gray-700 font-medium">{channelUsername}</span>
+        {/* End Date */}
+        <div className="border border-gray-200 p-5 rounded-lg">
+          <label className="flex items-center gap-2 font-medium mb-3 text-gray-800">
+            <Calendar className="w-5 h-5 text-[#51a6ea]" />
+            End Date & Time
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <input
+              type="date"
+              value={endDate.toISOString().split("T")[0]}
+              onChange={(e) => {
+                const [y, m, d] = e.target.value.split("-").map(Number);
+                const updated = new Date(endDate);
+                updated.setFullYear(y);
+                updated.setMonth(m - 1);
+                updated.setDate(d);
+                setEndDate(updated);
+                updateConfig(winners, updated);
+                setSelectedDuration(0); // Reset selected duration when manually changing date
+              }}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#51a6ea] focus:border-[#51a6ea]"
+            />
+            <input
+              type="time"
+              value={`${endDate.getHours().toString().padStart(2, "0")}:${endDate
+                .getMinutes()
+                .toString()
+                .padStart(2, "0")}`}
+              onChange={(e) => {
+                const [h, m] = e.target.value.split(":").map(Number);
+                const updated = new Date(endDate);
+                updated.setHours(h, m);
+                setEndDate(updated);
+                updateConfig(winners, updated);
+                setSelectedDuration(0); // Reset selected duration when manually changing time
+              }}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#51a6ea] focus:border-[#51a6ea]"
+            />
           </div>
-        )}
 
-        {/* Added Channels List */}
-        {channels.length > 0 && (
-          <div>
-            <label className="block text-lg font-medium mb-2 text-gray-700">
-              Required Channels:
-            </label>
-            <ul className="space-y-3">
-              {channels.map((channel, index) => (
-                <li
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-gray-100 rounded-lg"
-                >
-                  <div className="flex items-center space-x-3">
-                    {channel.photo ? (
-                      <img
-                        src={channel.photo}
-                        alt={channel.username}
-                        className="w-12 h-12 rounded-full border"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-300 rounded-full" />
-                    )}
-                    <a
-                      href={`https://t.me/${channel.username.replace("@", "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 font-medium hover:underline"
-                    >
-                      {channel.username}
-                    </a>
-                  </div>
-                  <button
-                    onClick={() => removeChannel(index)}
-                    className="text-red-500 hover:text-red-700 transition duration-300"
-                    type="button"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
+          <div className="flex gap-2 flex-wrap">
+            {[1, 3, 7, 14].map((days) => (
+              <button
+                key={days}
+                onClick={() => setQuickDuration(days)}
+                className={`px-3 py-1 border text-sm rounded-md ${
+                  selectedDuration === days
+                    ? "border-[#51a6ea] border-2 text-[#51a6ea] font-medium"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {days}d
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default StepTwo;
+interface GiveawayConfig {
+  winnersCount: number;
+  endDate: Date;
+}

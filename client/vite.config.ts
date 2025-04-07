@@ -18,8 +18,8 @@ export default defineConfig({
       credentials: true, 
     },
     hmr: {
-      clientPort: 443,
-      protocol: 'wss'
+      protocol: 'ws',
+      clientPort: 5173, 
     },
   },
   
