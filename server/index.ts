@@ -1,20 +1,21 @@
-import { Hono } from "hono";
-import {connectDB} from './config/db'
-import {Bot } from 'grammy'
 
-const bot = new Bot("7343758532:AAGTYrA72OvtRiXwtYLCEHeaE57N84p4fAc")
+import { Hono } from 'hono';
+import telegramRoutes from './routes/getChannelsOfUserRoute';
+import { logger } from './utils/logger';
+import { cors } from 'hono/cors';  // Correct import for CORS middleware
+
+// Initialize Hono app
 const app = new Hono();
-connectDB()
-// Define a simple route app.get("/whatsapp", (c) => { return c.text("Hello,
-// Bun + Hono!"); });
 
-bot.command('start', (ctx) => {
-ctx.reply("Welcome")
-})
+// Use the CORS middleware
+app.use(cors());
 
-bot.start() 
-// Start the server
+// Use the routes for Telegram endpoints
+app.route('/', telegramRoutes);
+
+// Start the server using `start()`
+
 export default {
-  port: 4000,
-  fetch: app.fetch,
-};
+   port: 3000,
+   fetch: app.fetch,
+ };
